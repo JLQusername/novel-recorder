@@ -1,0 +1,9 @@
+[project]
+name = "novel-recorder"
+version = "0.1.0"
+description = "Record novels from the command line"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "sqlmodel>=0.0.24",
+]
