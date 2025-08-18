@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, Session, create_engine, select
+from sqlmodel import SQLModel, Session, create_engine, select
 
 from model import Novel, NovelStatus
 
@@ -18,10 +18,18 @@ def get_all_novels() -> list[Novel]:
         return res.all()
 
 
+def get_novel_by_id(id: int) -> Novel | None:
+    with Session(engine) as session:
+        statement = select(Novel).where(Novel.id == id)
+        res = session.exec(statement)
+        return res.first()
+
+
 def add_novel(novel: Novel) -> None:
     with Session(engine) as session:
         session.add(novel)
         session.commit()
+        session.refresh(novel)
 
 
 def delete_novel(id: int) -> None:
@@ -43,11 +51,16 @@ def update_novel(id: int, novel: Novel) -> None:
             return
         if novel.id:
             old_novel.id = novel.id
-        old_novel.author = novel.author
-        old_novel.name = novel.name
-        old_novel.nationality = novel.nationality
-        old_novel.read_time = novel.read_time
-        old_novel.status = novel.status
+        if novel.author:
+            old_novel.author = novel.author
+        if novel.name:
+            old_novel.name = novel.name
+        if novel.nationality:
+            old_novel.nationality = novel.nationality
+        if novel.read_time:
+            old_novel.read_time = novel.read_time
+        if novel.status:
+            old_novel.status = novel.status
         session.add(old_novel)
         session.commit()
 
@@ -61,4 +74,6 @@ def get_newest_read_time() -> int:
 
 
 if __name__ == "__main__":
-    delete_novel(3)
+    create_db_and_tables()
+    # add_novel(Novel(author="author", name="name", nationality=0, status=0, read_time=0))
+    delete_novel(1)

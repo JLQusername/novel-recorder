@@ -9,10 +9,16 @@ class NovelStatus(Enum):
     FINISHED = 3
 
 
+class NovelNationality(Enum):
+    WESTERN = 0
+    JAPANESE = 1
+    CHINESE = 2
+
+
 class Novel(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int = Field(primary_key=True)
     name: str = Field(index=True)
-    author: str
-    nationality: str
-    status: NovelStatus = Field(default=NovelStatus.NO_BUY)
-    read_time: int = Field(default=-1)
+    author: str = Field(index=True)
+    nationality: NovelNationality = Field(index=True)
+    status: NovelStatus = Field(default=NovelStatus.NO_BUY, index=True)
+    read_time: int = Field(default=0, index=True)
