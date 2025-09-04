@@ -1,10 +1,15 @@
 from sqlmodel import SQLModel, Session, create_engine, select
 
-from model import Novel, NovelStatus
+from model import Novel, NovelNationality, NovelStatus
 
 
 sqlite_url = "sqlite:///novel.db"
 engine = create_engine(sqlite_url, echo=False)
+
+
+def initialize():
+    SQLModel.metadata.drop_all(engine)
+    SQLModel.metadata.create_all(engine)
 
 
 def create_db_and_tables():
@@ -75,5 +80,3 @@ def get_newest_read_time() -> int:
 
 if __name__ == "__main__":
     create_db_and_tables()
-    # add_novel(Novel(author="author", name="name", nationality=0, status=0, read_time=0))
-    delete_novel(1)

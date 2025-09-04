@@ -51,6 +51,8 @@ def update(
     status: Annotated[NovelStatus, typer.Option("--status", "-s")] = None,
     id: Annotated[int, typer.Option("--id", "-i")] = None,
 ) -> None:
+    if id is None:
+        id = -1
     novel = Novel(
         id=id,
         author=author,
@@ -68,19 +70,24 @@ def delete(id: int) -> None:
     typer.echo(f"Deleting {id}")
 
 
+@app.command()
+def init() -> None:
+    initialize()
+
+
 def _print_novel(novel: Novel) -> None:
     id = novel.id
     name = novel.name
     author = novel.author
-    national = get_real_nationality(novel.nationality)
+    nation = get_real_nationality(novel.nationality)
     status = get_real_status(novel.status)
     read_time = get_real_read_time(novel.read_time)
     name_len = 20 - get_chinese_char_num(name)
     author_len = 18 - get_chinese_char_num(author)
     status_len = 6 - get_chinese_char_num(status)
-    read_time_len = 9 - get_chinese_char_num(read_time)
+    rt_len = 9 - get_chinese_char_num(read_time)
     print(
-        f"+{id:3} |{name:{name_len}}|{author:{author_len}}|{national:2}|{status:{status_len}}|{read_time:{read_time_len}}+"
+        f"+{id:3} |{name:{name_len}}|{author:{author_len}}|{nation:2}|{status:{status_len}}|{read_time:{rt_len}}+"
     )
 
 
